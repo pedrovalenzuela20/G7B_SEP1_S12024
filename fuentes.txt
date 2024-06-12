@@ -1,0 +1,6 @@
+Add líneas personalidas
+    https://github.com/e2nIEE/pandapower/blob/991eef5801f7793c3091b77c4f67063c544fae52/tutorials/std_types.ipynb
+
+Modelo cómo trabajar lineas
+    https://github.com/e2nIEE/pandapower/blob/master/tutorials/create_simple.ipynb
+
