@@ -9,3 +9,6 @@ Modelo cómo trabajar lineas
 
 Página web 
     https://pandapower.readthedocs.io/en/v2.4.0/topology/examples.html
+
+Blog
+    https://ingeh.medium.com/markdown-for-jupyter-notebooks-cheatsheet-386c05aeebed
