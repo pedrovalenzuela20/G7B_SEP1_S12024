@@ -12,3 +12,6 @@ Página web
 
 Blog
     https://ingeh.medium.com/markdown-for-jupyter-notebooks-cheatsheet-386c05aeebed
+
+Tamaño imagenes
+    https://stackoverflow.com/questions/41598916/resize-the-image-in-jupyter-notebook-using-markdown
