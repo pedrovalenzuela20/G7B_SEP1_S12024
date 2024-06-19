@@ -1,31 +1,32 @@
-import pandapower as pp
-import pandapower.plotting.plotly as plotly
+import matplotlib.pyplot as plt
+import numpy
 
-#Crear una red vacía
-net = pp.create_empty_network()
+# Potencia inicial
+p_initial = 1200*0.9  # en Mw, 1200 MVA.
 
-#Añadir buses
-bus1 = pp.create_bus(net, vn_kv=500, name="Barra 1", type="b")
-bus2 = pp.create_bus(net, vn_kv=500, name="Barra 2", type="b")
+# Crear un rango de potencias que represente el cambio de ±50%
+p_range = numpy.linspace(p_initial*0.5, p_initial*1.5, num=100)
 
-#Caracteristicas
-linea_a = {"r_ohm_per_km": 0.02, "x_ohm_per_km": 0.115, "c_nf_per_km": 19.1, "max_i_ka": 1}
-pp.create_std_type(net, name="linea_a", data=linea_a, element="line")
-pp.available_std_types(net, element="line")
+# Lista para guardar las tensiones
+voltages = []
 
-#Añadir líneas
-pp.create_line(net, from_bus=bus1, to_bus=bus2, length_km=500, std_type="linea_a",  name="Línea 1")
+# Para cada potencia en el rango
+for p in p_range:
+    # Actualizar la carga en la red
+    net.load.loc[0, 'p_mw'] = p
+    
+    # Ejecutar una simulación de flujo de potencia
+    pp.runpp(net, tolerance_mva=100, max_iteration=100)
+    
+    # Guardar la tensión en el bus de la carga
+    voltages.append(net.res_bus.vm_pu[b2])
 
-#Añadir carga
-pp.create_load(net, bus2, p_mw=1080, q_mvar=523.03, scaling=0.9, name="Carga")
-#p.create_load(net, bus2, p_mw=1620, q_mvar=784.547, scaling=0.9, name="Carga+50%")
-#pp.create_load(net, bus2, p_mw=540, q_mvar=261.516, scaling=0.9, name="Carga-50%")
-
-#Añadir una fuente externa
-pp.create_ext_grid(net, bus1, vm_pu=1.02, name="Grid Connection")
-
-#Ejecutar el flujo de carga
-pp.runpp(net)
-
-#Visualizar la red con Plotly
-plotly.simple_plotly(net)
+# Graficar la tensión en función de la potencia
+plt.figure(figsize=(10, 6))
+plt.plot(p_range, voltages, label='Tensión en el bus de la carga')
+plt.xlabel('Potencia (Mw)')
+plt.ylabel('Tensión (p.u.)')
+plt.title('Comportamiento de la tensión para una carga que cambia en el rango ±50 de la potencia')
+plt.legend()
+plt.grid(True)
+plt.show()
